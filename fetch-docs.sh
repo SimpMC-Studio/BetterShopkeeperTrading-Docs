@@ -2,12 +2,14 @@
 
 # Configuration
 # Replace with your actual username and private repo name
+
 TEMP_DIR="BetterShopkeeperTrading"
 
 echo "🚀 Starting sync from private repository..."
 
 # adding ssh key
-mkdir -p ~/.ssh && echo '$ID_RSA' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
+eval `ssh-agent -s`
+ssh-add - <<< '$ID_RSA'
 git clone git@github.com:SimpMC-Studio/BetterShopkeeperTrading.git $TEMP_DIR
 
 # 2. Check if the docs folder exists in the source
