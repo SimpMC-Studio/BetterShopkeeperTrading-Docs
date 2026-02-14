@@ -7,8 +7,7 @@ TEMP_DIR="BetterShopkeeperTrading"
 echo "🚀 Starting sync from private repository..."
 
 # adding ssh key
-eval `ssh-agent -s`
-ssh-add - <<< '${{ secrets.ID_RSA }}'
+mkdir -p ~/.ssh && echo '${{ secrets.ID_RSA }}' > ~/.ssh/id_rsa && chmod 600 ~/.ssh/id_rsa
 git clone git@github.com:SimpMC-Studio/BetterShopkeeperTrading.git $TEMP_DIR
 
 # 2. Check if the docs folder exists in the source
