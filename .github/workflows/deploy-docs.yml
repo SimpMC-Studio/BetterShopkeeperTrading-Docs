@@ -19,7 +19,7 @@ jobs:
 
       - name: Fetch Private Docs
         env:
-          GH_TOKEN: ${{ secrets.MY_PAT }}
+          ID_RSA: ${{ secrets.ID_RSA }}
         run: |
           chmod +x ./fetch-docs.sh
           ./fetch-docs.sh
