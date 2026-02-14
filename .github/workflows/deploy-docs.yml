@@ -1,0 +1,43 @@
+name: Deploy Private Docs to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Current Repo
+        uses: actions/checkout@v5
+
+      - name: Fetch Private Docs
+        env:
+          GH_TOKEN: ${{ secrets.MY_PAT }}
+        run: |
+          chmod +x ./fetch-docs.sh
+          ./fetch-docs.sh
+
+      - name: Install, build, and upload your site
+        uses: withastro/action@v5
+        with:
+          # This tells the action that the Astro project 
+          # is located in the 'docs' folder we just synced
+          path: docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
