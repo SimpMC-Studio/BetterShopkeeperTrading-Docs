@@ -1,0 +1,62 @@
+---
+title: Hướng Dẫn Sử Dụng
+description: Tìm hiểu cách sử dụng BetterShopkeeperTrading để đồng bộ MMOItems trong giao dịch Shopkeeper
+---
+
+import { Card, CardGrid, Aside } from '@astrojs/starlight/components';
+
+BetterShopkeeperTrading (BST) là một plugin Minecraft Spigot/Paper giúp đồng bộ hóa MMOItems trong giao dịch thương nhân Shopkeeper với các vật phẩm trong túi đồ người chơi bằng cách khớp ID MMOItems. Khi một giao dịch shopkeeper yêu cầu một loại vật phẩm tùy chỉnh cụ thể, plugin sẽ thay thế nó bằng vật phẩm thực tế từ túi đồ người chơi, cho phép giao dịch hoạt động chính xác với các vật phẩm tùy chỉnh.
+
+## Tính Năng Chính
+
+<CardGrid>
+  <Card title="Đồng Bộ Vật Phẩm" icon="puzzle">
+    Tự động khớp MMOItems trong Trade shopkeeper với vật phẩm trong túi đồ của bạn theo ID, đảm bảo giao dịch hoạt động với vật phẩm tùy chỉnh.
+  </Card>
+  <Card title="Trả Lại Gems" icon="star">
+    Trích xuất và trả lại Gems từ MMOItems đã giao dịch để ngăn mất các nâng cấp có giá trị.
+  </Card>
+  <Card title="Trả Lại Sách Phù Phép" icon="open-book">
+    Trả lại sách phù phép từ vật phẩm đã giao dịch (yêu cầu plugin AdvancedEnchantments).
+  </Card>
+  <Card title="Trả Lại Skin" icon="seti:image">
+    Trả lại skin vật phẩm từ MMOItems đã trade
+  </Card>
+</CardGrid>
+
+## Lệnh
+
+| Lệnh | Quyền | Mô Tả |
+|---------|-----------|-------------|
+| `/bst reload` | `bst.admin` | Tải lại tất cả các file cấu hình |
+
+## Bắt Đầu Nhanh
+
+1. Cài đặt các plugin phụ thuộc: Paper 1.21+, MMOItems, Shopkeepers
+2. Thả file JAR plugin vào thư mục `plugins/` của bạn
+3. Khởi động server để tạo các file cấu hình mặc định
+4. Cấu hình các thiết lập trong `main-config.yml` và `item-return-config.yml`
+5. Sử dụng `/bst reload` để áp dụng thay đổi mà không cần khởi động lại
+
+<Aside type="tip">
+  Bật `debug: true` trong `main-config.yml` để xem log chi tiết về việc khớp vật phẩm nếu giao dịch không hoạt động như mong đợi.
+</Aside>
+
+## Cách Hoạt Động
+
+Khi người chơi mở một shopkeeper với giao dịch MMOItem:
+
+1. BST quét túi đồ người chơi để tìm vật phẩm khớp với ID MMOItems yêu cầu
+2. Hiển thị giao dịch được cập nhật để hiển thị vật phẩm thực tế của người chơi
+3. Khi giao dịch được thực hiện, BST xác thực vật phẩm và xử lý trao đổi
+4. Đá quý, sách phù phép và skin được trích xuất và trả lại cho người chơi
+
+<Aside type="caution">
+  Plugin này **không tương thích** với ViaVersion. Xem trang [Tương Thích](/compatibility) để biết chi tiết.
+</Aside>
+
+## Bước Tiếp Theo
+
+- [Cài đặt plugin](/installation) trên server của bạn
+- Cấu hình [thiết lập chính](/configuration/main-config) và [hành vi trả vật phẩm](/configuration/item-return-config)
+- Kiểm tra [Câu Hỏi Thường Gặp](/faq) để biết các câu hỏi phổ biến và khắc phục sự cố

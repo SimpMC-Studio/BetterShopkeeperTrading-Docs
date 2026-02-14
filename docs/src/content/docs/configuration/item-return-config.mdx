@@ -1,0 +1,120 @@
+---
+title: Cấu Hình Trả Vật Phẩm
+description: Tài liệu tham khảo cấu hình cho item-return-config.yml
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+File `item-return-config.yml` điều khiển việc trích xuất và trả lại đá quý, sách phù phép và skin từ các MMOItems đã giao dịch.
+
+## Các Tùy Chọn Cấu Hình
+
+| Khóa | Kiểu | Mặc Định | Mô Tả |
+|-----|------|---------|-------------|
+| `enable-gem-return` | boolean | `true` | Trích xuất và trả lại đá quý từ vật phẩm đã giao dịch |
+| `enable-book-return` | boolean | `true` | Trích xuất và trả lại sách phù phép (yêu cầu AdvancedEnchantments) |
+| `enable-skin-return` | boolean | `true` | Trích xuất và trả lại skin vật phẩm từ vật phẩm đã giao dịch |
+| `book-success-rate` | int | `100` | Tỷ lệ thành công trích xuất sách (0-100) |
+| `book-destroy-rate` | int | `0` | Cơ hội sách bị phá hủy khi trích xuất (0-100) |
+| `deny-trade-if-inventory-full` | boolean | `true` | Chặn giao dịch nếu túi đồ người chơi không thể chứa vật phẩm trả lại |
+| `debug-item-return` | boolean | `false` | Bật log debug cho các hoạt động trả vật phẩm |
+
+## Chi Tiết Tùy Chọn
+
+### `enable-gem-return`
+
+Khi `true`, các đá quý được gắn trong MMOItems đã giao dịch sẽ được trích xuất và trả lại túi đồ người chơi. Điều này ngăn người chơi mất các đá quý có giá trị khi giao dịch vật phẩm.
+
+<Aside type="tip">
+  Đá quý được trích xuất bằng API trích xuất tích hợp của MMOItems, đảm bảo tương thích với tất cả các loại đá quý.
+</Aside>
+
+### `enable-book-return`
+
+Khi `true`, sách phù phép được tạo từ AdvancedEnchantments trên vật phẩm đã giao dịch và trả lại cho người chơi.
+
+<Aside type="caution">
+  Tính năng này **yêu cầu** plugin AdvancedEnchantments. Phù phép Minecraft vanilla **không** được trả lại.
+</Aside>
+
+### `enable-skin-return`
+
+Khi `true`, skin vật phẩm được áp dụng cho MMOItems đã giao dịch sẽ được trích xuất và trả lại túi đồ người chơi dưới dạng vật phẩm skin.
+
+### `book-success-rate`
+
+Phần trăm cơ hội (0-100) rằng một sách phù phép sẽ được trích xuất thành công. Ở `100`, tất cả sách luôn được trích xuất. Ở `50`, mỗi sách có 50% cơ hội được trả lại.
+
+### `book-destroy-rate`
+
+Phần trăm cơ hội (0-100) rằng một sách phù phép sẽ bị phá hủy trong quá trình trích xuất. Điều này được kiểm tra **sau** kiểm tra tỷ lệ thành công.
+
+**Cách tỷ lệ thành công và phá hủy hoạt động cùng nhau:**
+
+1. Đầu tiên, tỷ lệ thành công được kiểm tra. Nếu thất bại, không có sách nào được tạo.
+2. Nếu thành công, tỷ lệ phá hủy được kiểm tra. Nếu thành công, sách bị phá hủy thay vì được trả lại.
+
+**Ví dụ:**
+- `book-success-rate: 100`, `book-destroy-rate: 0` → Tất cả sách luôn được trả lại
+- `book-success-rate: 80`, `book-destroy-rate: 20` → 80% cơ hội trích xuất, sau đó 20% sách được trích xuất bị phá hủy
+- `book-success-rate: 50`, `book-destroy-rate: 50` → 50% cơ hội trích xuất, sau đó 50% sách được trích xuất bị phá hủy
+
+<Aside type="note">
+  Sử dụng tỷ lệ phá hủy để thêm cơ chế rủi ro/phần thưởng hoặc ngăn chặn khai thác nhân bản phù phép.
+</Aside>
+
+### `deny-trade-if-inventory-full`
+
+Khi `true`, giao dịch bị chặn nếu túi đồ người chơi không có đủ chỗ cho các vật phẩm trả lại (đá quý, sách, skin). Điều này ngăn vật phẩm bị mất.
+
+Khi `false`, giao dịch tiếp tục ngay cả khi túi đồ đầy, và các vật phẩm trả lại có thể bị rơi xuống đất hoặc mất.
+
+<Aside type="danger">
+  Đặt thành `false` có thể dẫn đến người chơi mất đá quý và sách nếu túi đồ của họ đầy. Chỉ tắt nếu bạn có hệ thống khác để xử lý vật phẩm tràn.
+</Aside>
+
+### `debug-item-return`
+
+Khi `true`, ghi log thông tin chi tiết về:
+- Các lần thử trích xuất đá quý và kết quả
+- Thành công/thất bại tạo sách
+- Trích xuất skin
+- Tính toán không gian túi đồ
+
+Bật tùy chọn này nếu vật phẩm không được trả lại chính xác.
+
+## Ví Dụ Cấu Hình
+
+```yaml
+# BetterShopkeeperTrading @ 2025
+# Made by typical.smc
+
+# Bật trả lại đá quý từ vật phẩm đã giao dịch
+enable-gem-return: true
+
+# Bật trả lại sách phù phép (yêu cầu AdvancedEnchantments)
+enable-book-return: true
+
+# Bật trả lại skin từ vật phẩm đã giao dịch
+enable-skin-return: true
+
+# Tỷ lệ thành công trích xuất sách (0-100)
+book-success-rate: 100
+
+# Tỷ lệ phá hủy sách sau khi trích xuất thành công (0-100)
+book-destroy-rate: 0
+
+# Chặn giao dịch nếu túi đồ đầy
+deny-trade-if-inventory-full: true
+
+# Bật log debug cho trả vật phẩm
+debug-item-return: false
+```
+
+<Aside type="note">
+  Sau khi chỉnh sửa file này, sử dụng `/bst reload` để áp dụng thay đổi mà không cần khởi động lại server.
+</Aside>
+
+## Cấu Hình Liên Quan
+
+- [Cấu Hình Chính](/configuration/main-config) - Thiết lập cốt lõi của plugin

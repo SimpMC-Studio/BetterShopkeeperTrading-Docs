@@ -1,0 +1,95 @@
+---
+title: Cấu Hình Chính
+description: Tài liệu tham khảo cấu hình cho main-config.yml
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+File `main-config.yml` điều khiển hành vi cốt lõi của plugin, bao gồm thiết lập đồng bộ vật phẩm và tùy chọn debug.
+
+## Các Tùy Chọn Cấu Hình
+
+| Khóa | Kiểu | Mặc Định | Mô Tả |
+|-----|------|---------|-------------|
+| `enabled` | boolean | `true` | Bật hoặc tắt toàn bộ chức năng plugin |
+| `debug` | boolean | `false` | Bật log debug để khắc phục sự cố khớp vật phẩm |
+| `sync-only-non-stackable` | boolean | `true` | Chỉ đồng bộ vật phẩm không xếp chồng (khuyến nghị cho hiệu suất) |
+| `close-ui-after-mmo-trade` | boolean | `false` | Tự động đóng giao diện thương nhân sau khi hoàn thành giao dịch MMOItem |
+| `enable-auto-placement` | boolean | `true` | Tự động đặt vật phẩm khớp vào ô giao dịch thương nhân |
+| `enable-manual-matching` | boolean | `true` | Bật khớp công thức thủ công cho các trường hợp đặc biệt |
+
+## Chi Tiết Tùy Chọn
+
+### `enabled`
+
+Công tắc chính cho plugin. Đặt thành `false` để tắt tất cả chức năng mà không cần gỡ plugin.
+
+### `debug`
+
+Khi được bật, plugin sẽ ghi log thông tin chi tiết về:
+- Các lần thử khớp vật phẩm
+- Phát hiện ID MMOItems
+- Sự kiện đồng bộ giao dịch
+- Chi tiết chặn packet
+
+<Aside type="tip">
+  Bật tùy chọn này nếu vật phẩm không đồng bộ chính xác để xem điều gì đang xảy ra bên trong.
+</Aside>
+
+### `sync-only-non-stackable`
+
+Khi `true`, chỉ các vật phẩm không xếp chồng (kích thước stack tối đa = 1) được đồng bộ. Điều này được khuyến nghị vì:
+- Hầu hết các MMOItems tùy chỉnh đều không xếp chồng
+- Giảm xử lý không cần thiết cho các vật phẩm xếp chồng thông thường
+- Cải thiện hiệu suất trên các server bận rộn
+
+Đặt thành `false` nếu bạn có các vật phẩm tùy chỉnh xếp chồng cần đồng bộ.
+
+### `close-ui-after-mmo-trade`
+
+Khi `true`, giao diện thương nhân tự động đóng sau một giao dịch MMOItem thành công. Hữu ích cho:
+- Ngăn chặn giao dịch trùng lặp vô tình
+- Buộc người chơi mở lại giao diện để xem túi đồ đã cập nhật
+
+Đặt thành `false` để giữ giao diện mở (hành vi vanilla).
+
+### `enable-auto-placement`
+
+Khi `true`, các vật phẩm khớp được tự động đặt vào các ô giao dịch thương nhân chính xác. Tắt tùy chọn này nếu bạn gặp xung đột với các plugin khác sửa đổi giao diện thương nhân.
+
+### `enable-manual-matching`
+
+Bật khớp công thức thủ công dự phòng khi khớp tự động thất bại. Giữ tùy chọn này được bật trừ khi bạn gặp sự cố.
+
+## Ví Dụ Cấu Hình
+
+```yaml
+# BetterShopkeeperTrading @ 2025
+# Made by typical.smc
+
+# Bật hoặc tắt plugin
+enabled: true
+
+# Bật log debug
+debug: false
+
+# Chỉ đồng bộ vật phẩm không xếp chồng (khuyến nghị)
+sync-only-non-stackable: true
+
+# Đóng giao diện sau giao dịch MMOItem
+close-ui-after-mmo-trade: false
+
+# Bật tự động đặt vật phẩm vào ô giao dịch
+enable-auto-placement: true
+
+# Bật khớp công thức thủ công dự phòng
+enable-manual-matching: true
+```
+
+<Aside type="note">
+  Sau khi chỉnh sửa file này, sử dụng `/bst reload` để áp dụng thay đổi mà không cần khởi động lại server.
+</Aside>
+
+## Cấu Hình Liên Quan
+
+- [Cấu Hình Trả Vật Phẩm](/configuration/item-return-config) - Cấu hình hành vi trả đá quý và sách

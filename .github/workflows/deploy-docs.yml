@@ -16,14 +16,6 @@ jobs:
     steps:
       - name: Checkout Current Repo
         uses: actions/checkout@v5
-
-      - name: Fetch Private Docs
-        env:
-          ID_RSA: ${{ secrets.ID_RSA }}
-        run: |
-          chmod +x ./fetch-docs.sh
-          ./fetch-docs.sh
-
       - name: Install, build, and upload your site
         uses: withastro/action@v5
         with:

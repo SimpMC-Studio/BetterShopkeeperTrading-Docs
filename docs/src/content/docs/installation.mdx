@@ -1,0 +1,95 @@
+---
+title: Cài Đặt
+description: Hướng dẫn cài đặt BetterShopkeeperTrading trên server Minecraft của bạn
+---
+
+import { Steps, Aside, Badge } from '@astrojs/starlight/components';
+
+## Yêu Cầu
+
+### Bắt Buộc <Badge text="Bắt Buộc" variant="danger" />
+
+- **Paper** 1.21 trở lên (Spigot có thể hoạt động nhưng không được hỗ trợ chính thức)
+- **Java** 21 trở lên
+- Plugin **MMOItems** (khuyến nghị phiên bản mới nhất)
+- Plugin **Shopkeepers** (khuyến nghị phiên bản mới nhất)
+
+### Tùy Chọn <Badge text="Tùy Chọn" variant="note" />
+
+- **AdvancedEnchantments** (yêu cầu cho tính năng trả lại sách phù phép)
+
+<Aside type="caution">
+  Plugin này **không tương thích** với ViaVersion. Không sử dụng ViaVersion trên server chạy BetterShopkeeperTrading. Xem [Tương Thích](/compatibility) để biết chi tiết.
+</Aside>
+
+## Các Bước Cài Đặt
+
+<Steps>
+
+1. **Tải plugin**
+
+   Tải file `BetterShopkeeperTrading-X.X.X.jar` mới nhất từ trang releases.
+
+2. **Cài đặt các plugin phụ thuộc**
+
+   Đảm bảo MMOItems và Shopkeepers đã được cài đặt và hoạt động trên server của bạn. Nếu bạn muốn tính năng trả lại sách phù phép, cũng cài đặt AdvancedEnchantments.
+
+3. **Đặt file JAR**
+
+   Sao chép `BetterShopkeeperTrading-X.X.X.jar` vào thư mục `plugins/` của server.
+
+4. **Khởi động server**
+
+   Khởi động hoặc khởi động lại server Minecraft của bạn. Plugin sẽ tự động tạo các file cấu hình mặc định.
+
+5. **Xác minh cài đặt**
+
+   Kiểm tra console của bạn để tìm các thông báo sau:
+
+   ```
+   [BetterShopkeeperTrading] Loading all configurations
+   [BetterShopkeeperTrading] All configurations loaded successfully
+   [BetterShopkeeperTrading] MMOItems hooked successfully
+   [BetterShopkeeperTrading] Shopkeepers hooked successfully
+   ```
+
+   Nếu bạn thấy các thông báo này, plugin đã được cài đặt chính xác.
+
+</Steps>
+
+## Xác Minh Các File Cấu Hình
+
+Sau lần khởi động đầu tiên, bạn sẽ thấy các file này trong `plugins/BetterShopkeeperTrading/`:
+
+- `main-config.yml` - Thiết lập cốt lõi của plugin
+- `message-config.yml` - Thông báo cho người chơi và console
+- `item-return-config.yml` - Thiết lập trả lại đá quý và sách
+
+<Aside type="tip">
+  Sau khi chỉnh sửa bất kỳ file cấu hình nào, sử dụng `/bst reload` trong game hoặc console để áp dụng thay đổi mà không cần khởi động lại server.
+</Aside>
+
+## Khắc Phục Sự Cố
+
+### Plugin không khởi động được
+
+Nếu plugin không khởi động được, kiểm tra console để tìm thông báo lỗi:
+
+- **"MMOItems not found"** - Cài đặt plugin MMOItems
+- **"Shopkeepers not found"** - Cài đặt plugin Shopkeepers
+- **Lỗi phiên bản Java** - Nâng cấp lên Java 21 trở lên
+
+### Vật phẩm không đồng bộ
+
+Nếu vật phẩm không đồng bộ trong giao dịch:
+
+1. Bật chế độ debug: Đặt `debug: true` trong `main-config.yml`
+2. Chạy `/bst reload`
+3. Mở một shopkeeper và kiểm tra log console để biết chi tiết khớp vật phẩm
+4. Xác minh vật phẩm của bạn có dữ liệu NBT MMOItems (kiểm tra bằng `/mmoitems browse`)
+
+## Bước Tiếp Theo
+
+- Cấu hình [thiết lập chính](/configuration/main-config)
+- Thiết lập [hành vi trả vật phẩm](/configuration/item-return-config)
+- Đọc [Câu Hỏi Thường Gặp](/faq) để biết các câu hỏi phổ biến

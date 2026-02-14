@@ -1,0 +1,120 @@
+---
+title: Câu Hỏi Thường Gặp
+description: Các câu hỏi thường gặp về BetterShopkeeperTrading
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Câu Hỏi Chung
+
+### Plugin này làm gì?
+
+BetterShopkeeperTrading đồng bộ hóa MMOItems trong giao dịch thương nhân Shopkeeper với các vật phẩm trong túi đồ người chơi. Khi một shopkeeper yêu cầu một vật phẩm tùy chỉnh cụ thể, plugin khớp nó theo ID MMOItems và sử dụng vật phẩm thực tế của người chơi trong giao dịch. Nó cũng trích xuất và trả lại đá quý, sách phù phép và skin từ các vật phẩm đã giao dịch.
+
+### Tôi có cần AdvancedEnchantments không?
+
+Không, AdvancedEnchantments là tùy chọn. Plugin hoạt động mà không có nó, nhưng bạn sẽ không nhận được tính năng trả lại sách phù phép. Trả lại đá quý và skin hoạt động độc lập với AdvancedEnchantments.
+
+### Phiên bản Minecraft nào được hỗ trợ?
+
+Plugin yêu cầu Paper 1.21 trở lên và Java 21. Spigot có thể hoạt động nhưng không được hỗ trợ chính thức.
+
+### Có tương thích với ViaVersion không?
+
+**Không.** BetterShopkeeperTrading **không tương thích** với ViaVersion. Xem trang [Tương Thích](/compatibility) để biết chi tiết.
+
+## Cấu Hình
+
+### Làm thế nào để tải lại cấu hình?
+
+Sử dụng lệnh `/bst reload` trong game hoặc console. Bạn cần quyền `bst.admin`.
+
+### Tôi có thể tắt plugin mà không gỡ nó không?
+
+Có, đặt `enabled: false` trong `main-config.yml` và chạy `/bst reload`.
+
+## Khắc Phục Sự Cố
+
+### Vật phẩm không đồng bộ trong giao dịch
+
+1. Bật chế độ debug: Đặt `debug: true` trong `main-config.yml`
+2. Chạy `/bst reload`
+3. Mở một shopkeeper và kiểm tra log console
+4. Xác minh vật phẩm của bạn có dữ liệu NBT MMOItems bằng `/mmoitems browse`
+5. Kiểm tra xem `sync-only-non-stackable` có được bật và vật phẩm của bạn có xếp chồng không
+
+<Aside type="tip">
+  Hầu hết các MMOItems tùy chỉnh đều không xếp chồng. Nếu bạn có vật phẩm tùy chỉnh xếp chồng, đặt `sync-only-non-stackable: false`.
+</Aside>
+
+### Đá quý hoặc sách không được trả lại
+
+1. Bật debug: Đặt `debug-item-return: true` trong `item-return-config.yml`
+2. Chạy `/bst reload`
+3. Hoàn thành một giao dịch và kiểm tra log console
+4. Đối với sách: Xác minh AdvancedEnchantments đã được cài đặt và vật phẩm có phù phép AE
+5. Kiểm tra thiết lập `book-success-rate` và `book-destroy-rate`
+
+<Aside type="note">
+  Phù phép Minecraft vanilla **không** được trả lại, chỉ có AdvancedEnchantments.
+</Aside>
+
+### Giao dịch bị chặn với thông báo "túi đồ đầy"
+
+Điều này xảy ra khi `deny-trade-if-inventory-full: true` và túi đồ của bạn không có chỗ cho các vật phẩm trả lại (đá quý, sách, skin).
+
+**Giải pháp:**
+- Giải phóng không gian túi đồ trước khi giao dịch
+- Đặt `deny-trade-if-inventory-full: false` (không khuyến nghị, vật phẩm có thể bị mất)
+
+### Skin không được trả lại
+
+1. Xác minh `enable-skin-return: true` trong `item-return-config.yml`
+2. Bật `debug-item-return: true` và kiểm tra log console
+3. Đảm bảo vật phẩm đã giao dịch thực sự có skin được áp dụng
+
+### Phù phép vanilla có được trả lại dưới dạng sách không?
+
+Không, chỉ có AdvancedEnchantments được trả lại dưới dạng sách. Phù phép Minecraft vanilla không được trích xuất.
+
+### Tôi có thể điều chỉnh tỷ lệ trích xuất sách không?
+
+Có, sử dụng `book-success-rate` và `book-destroy-rate` trong `item-return-config.yml`:
+- `book-success-rate`: Cơ hội trích xuất một sách (0-100)
+- `book-destroy-rate`: Cơ hội phá hủy một sách đã trích xuất (0-100)
+
+Xem [Cấu Hình Trả Vật Phẩm](/configuration/item-return-config) để biết chi tiết về cách các tỷ lệ này hoạt động cùng nhau.
+
+### Plugin báo "MMOItems not found" hoặc "Shopkeepers not found"
+
+Cài đặt plugin phụ thuộc còn thiếu và khởi động lại server của bạn. Cả MMOItems và Shopkeepers đều bắt buộc.
+
+## Nâng Cao
+
+### Plugin này có hoạt động với các loại Shopkeeper tùy chỉnh không?
+
+Có, plugin hoạt động với tất cả các loại Shopkeeper (cửa hàng người chơi, cửa hàng admin, v.v.) miễn là chúng sử dụng giao diện thương nhân tiêu chuẩn.
+
+### Tôi có thể tùy chỉnh thông báo không?
+
+Có, chỉnh sửa `message-config.yml` để tùy chỉnh tất cả thông báo người chơi và console. Sử dụng mã màu Minecraft (`&a`, `&c`, v.v.).
+
+### Plugin này có ảnh hưởng đến hiệu suất server không?
+
+Plugin sử dụng chặn packet và bộ nhớ đệm để giảm thiểu tác động hiệu suất. Bật `sync-only-non-stackable: true` (mặc định) để giảm chi phí xử lý.
+
+### Tôi có thể tắt các tính năng cụ thể không?
+
+Có, bạn có thể tắt:
+- Trả lại đá quý: `enable-gem-return: false`
+- Trả lại sách: `enable-book-return: false`
+- Trả lại skin: `enable-skin-return: false`
+- Tự động đóng giao diện: `close-ui-after-mmo-trade: false`
+
+## Vẫn Cần Trợ Giúp?
+
+Nếu câu hỏi của bạn không được trả lời ở đây:
+1. Kiểm tra hướng dẫn [Cài Đặt](/installation)
+2. Xem lại các trang [Cấu Hình](/configuration/main-config)
+3. Bật chế độ debug và kiểm tra log console
+4. Inbox qua BlockMart hoặc inbox discord tác giả ``typical.smc``

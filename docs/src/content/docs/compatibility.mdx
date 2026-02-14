@@ -1,0 +1,100 @@
+---
+title: Tương Thích
+description: Thông tin tương thích plugin và các vấn đề đã biết
+---
+
+import { Aside } from '@astrojs/starlight/components';
+
+## Không Tương Thích Với ViaVersion
+
+<Aside type="danger" title="Không Tương Thích Với ViaVersion">
+  BetterShopkeeperTrading **không tương thích** với ViaVersion. Không sử dụng cả hai plugin trên cùng một server.
+</Aside>
+
+### Tại sao ViaVersion không tương thích?
+
+ViaVersion sửa đổi dữ liệu packet và cấu trúc NBT để dịch giữa các phiên bản Minecraft khác nhau. Điều này phá vỡ chức năng cốt lõi của BetterShopkeeperTrading:
+
+1. **Sửa Đổi Dữ Liệu NBT**: ViaVersion thay đổi các thẻ NBT để khớp với các định dạng phiên bản khác nhau, có thể làm hỏng hoặc xóa các thẻ `MMOITEMS_ITEM_ID` và `MMOITEMS_ITEM_TYPE` mà BST dựa vào để khớp vật phẩm.
+
+2. **Dịch Packet**: ViaVersion chặn và dịch các packet giữa các phiên bản, can thiệp vào hệ thống đồng bộ vật phẩm dựa trên packet của BST.
+
+3. **Chuyển Đổi ItemStack**: Khi người chơi trên các phiên bản khác nhau tương tác với cùng một vật phẩm, quá trình chuyển đổi của ViaVersion có thể loại bỏ dữ liệu NBT tùy chỉnh hoặc thay đổi biểu diễn vật phẩm.
+
+### Tác Động
+
+Khi ViaVersion được cài đặt cùng với BetterShopkeeperTrading:
+
+- Vật phẩm có thể không đồng bộ trong giao dịch shopkeeper
+- ID MMOItems có thể không được phát hiện chính xác
+- Giao dịch có thể thất bại xác thực
+- Đá quý, sách và skin có thể không được trả lại đúng cách
+- Người chơi trên các phiên bản Minecraft khác nhau sẽ có trải nghiệm không nhất quán
+
+### Giải Pháp
+
+Chọn một trong các cách tiếp cận sau:
+
+#### Tùy Chọn 1: Gỡ ViaVersion (Khuyến Nghị)
+
+Yêu cầu tất cả người chơi sử dụng cùng phiên bản Minecraft với server của bạn. Điều này đảm bảo:
+- Tương thích đầy đủ với BetterShopkeeperTrading
+- Trải nghiệm chơi game nhất quán cho tất cả người chơi
+- Không có lỗi hoặc hỏng dữ liệu liên quan đến phiên bản
+
+#### Tùy Chọn 2: Gỡ BetterShopkeeperTrading
+
+Nếu hỗ trợ nhiều phiên bản Minecraft quan trọng hơn đồng bộ giao dịch MMOItems, giữ ViaVersion và gỡ plugin này.
+
+#### Tùy Chọn 3: Chấp Nhận Hạn Chế
+
+Giữ cả hai plugin nhưng hiểu rằng:
+- Người chơi trên các phiên bản khác nhau có thể không thể giao dịch MMOItems trong shopkeeper
+- Đồng bộ vật phẩm có thể không đáng tin cậy
+- Hỗ trợ sẽ không được cung cấp cho các vấn đề liên quan đến ViaVersion
+
+<Aside type="caution">
+  Nếu bạn chọn Tùy Chọn 3, bật `debug: true` trong `main-config.yml` để xem log chi tiết về các lỗi khớp vật phẩm.
+</Aside>
+
+## Tương Thích Plugin Khác
+
+### Plugin Có Thể Không Tương Thích
+
+Các loại plugin sau có thể gây xung đột nhưng chưa được kiểm tra kỹ lưỡng:
+
+- Các plugin sửa đổi thương nhân/giao dịch khác
+- Plugin quản lý túi đồ chặn packet
+- Plugin vật phẩm tùy chỉnh sửa đổi dữ liệu NBT
+- Plugin chống gian lận với xác thực packet nghiêm ngặt
+
+Nếu bạn gặp sự cố với các plugin khác, bật chế độ debug và báo cáo sự cố với log console.
+
+## Hỗ Trợ Folia
+
+BetterShopkeeperTrading có hỗ trợ Folia.
+## Hỗ Trợ Phiên Bản
+
+- **Minecraft**: 1.21+ (khuyến nghị Paper)
+- **Java**: 21+
+- **MMOItems**: Khuyến nghị phiên bản mới nhất
+- **Shopkeepers**: Khuyến nghị phiên bản mới nhất
+- **AdvancedEnchantments**: Khuyến nghị phiên bản mới nhất (nếu sử dụng trả lại sách)
+
+<Aside type="note">
+  Các phiên bản cũ hơn có thể hoạt động nhưng không được hỗ trợ chính thức. Luôn sử dụng các bản phát hành ổn định mới nhất của các plugin phụ thuộc.
+</Aside>
+
+## Báo Cáo Vấn Đề Tương Thích
+
+Nếu bạn phát hiện vấn đề tương thích với plugin khác:
+
+1. Bật `debug: true` trong `main-config.yml`
+2. Bật `debug-item-return: true` trong `item-return-config.yml`
+3. Tái tạo sự cố và ghi lại log console
+4. Báo cáo trên GitHub với:
+   - Phiên bản server (Paper/Spigot/Folia)
+   - Phiên bản Java
+   - Danh sách các plugin đã cài đặt
+   - Log console đầy đủ hiển thị sự cố
+   - Các bước để tái tạo
